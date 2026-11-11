@@ -36,3 +36,11 @@ Startup now waits for an existing worker lock to clear, watches the launched pro
 `change_speed` adds pitch-preserving tempo adjustment after segment assembly. A real CLI request using the same reference, text, and seed as the startup check produced 7.60 seconds before adjustment and 5.06 seconds in the final WAV at speed 1.5. The final watermark pass can round a small number of samples at frame boundaries. The actual saved duration is reported in metadata.
 
 The `--out` file, HTTP audio artifact, and MCP audio attachment were verified byte-identical and contained the adjusted waveform. See [speed-validation.json](speed-validation.json). Tests also check duration and pitch at speeds 0.5, 0.75, 1.25, and 1.5, exact sample preservation at 1, range validation, CLI aliases, batch defaults, MCP transport, and retries of older jobs without a speed field. The current total is 54 passing tests; lint passes.
+
+## FFmpeg replacement after speech-quality report
+
+The first speed implementation used librosa's phase vocoder. A user reported tinny audio at speed 0.95. The saved original was 35.78 seconds and the adjusted result was 37.66 seconds, so tempo did change, but by only 5%. Earlier duration and pure-tone pitch tests did not detect transient smearing.
+
+A deterministic burst-and-silence regression test exposes this problem: 929 input samples exceed 1% of peak, compared with 5,781 after librosa and 1,427 after FFmpeg atempo. This measures transient spreading, not a perceptual quality score. The test failed before the replacement and passes afterward. The implementation now runs FFmpeg with raw float audio through pipes, flushes its overlap window before trimming to the requested duration, and reports failures instead of silently falling back to the phase vocoder. Speed 1 remains a no-op. The final watermark step is retained.
+
+The user's full three-segment request was regenerated through the restarted CLI worker with the same reference and seed. A second, more noticeable slowdown was made from the saved original at 0.8. See [ffmpeg-speed-validation.json](ffmpeg-speed-validation.json) for actual durations and artifact checks. All 58 tests and lint pass, including duration and pitch tests at 0.95 and the original range endpoints. Listening quality remains for the user to assess on these comparison clips.

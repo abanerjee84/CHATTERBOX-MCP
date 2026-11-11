@@ -6,7 +6,7 @@ The supported target is **Windows x64 with an RTX 3060 12 GB**. The worker selec
 
 This project retains the original Chatterbox English model and its **exaggeration and CFG controls**. It uses pinned Chatterbox 0.1.7 inference sources with the existing tested PyTorch 2.8 CUDA runtime. Turbo, Nano, and multilingual models are separate upstream variants and are not exposed here.
 
-**Validated locally:** 54 tests pass; both MCP transports generate actual speech and cloned voices. A two-segment passage produced 19.95 seconds of audio in 19.44 seconds with models resident, peaking at 3,675 MiB dedicated VRAM. A repeated default-voice request was byte-identical before and after a reference-voice job. See [validation details](docs/gpu-validation.md).
+**Validated locally:** 58 tests pass; both MCP transports generate actual speech and cloned voices. A two-segment passage produced 19.95 seconds of audio in 19.44 seconds with models resident, peaking at 3,675 MiB dedicated VRAM. A repeated default-voice request was byte-identical before and after a reference-voice job. See [validation details](docs/gpu-validation.md).
 
 ## Install
 
@@ -80,7 +80,11 @@ chatter-tts generate --text "This sentence will be faster." --change_speed 1.5 -
 
 `0.5` is half speed, taking approximately twice as long; `1` keeps the original speed; `1.5` is one-and-a-half speed, taking approximately two-thirds as long. Values outside 0.5-1.5 are rejected before generation.
 
-The adjustment uses the installed Python/librosa runtime and preserves pitch. No FFmpeg installation is needed. It runs after all speech segments and joins are combined. The adjusted waveform is the final job WAV, the `--out` copy, the HTTP download, and the MCP audio attachment. The final audio is watermarked again after a tempo change. At speed 1 the waveform is left untouched.
+The adjustment uses FFmpeg's `atempo` filter to preserve pitch. Install FFmpeg and put `ffmpeg.exe` on PATH before starting the worker. A missing FFmpeg executable fails the job before model loading. At speed 1 FFmpeg is not required and the waveform is left untouched.
+
+This replaces the initial librosa phase-vocoder implementation, which smeared transients in a regression test and produced a user report of tinny speech. The adjustment runs after all speech segments and joins are combined. The adjusted waveform is the final job WAV, the `--out` copy, the HTTP download, and the MCP audio attachment. The final audio is watermarked again after a tempo change.
+
+`0.95` is only 5% slower: a 35.78-second original becomes about 37.66 seconds. Use `0.8` for a more noticeable slowdown, about 44.73 seconds for the same original. Tempo processing can still introduce artifacts, especially near the range limits.
 
 MCP and HTTP use `change_speed`, for example `"change_speed": 0.8`. Metadata records `change_speed`, `original_duration_seconds`, and the adjusted `duration_seconds`. Batch entries can each specify `change_speed`; a CLI speed supplies the default for entries that omit it.
 

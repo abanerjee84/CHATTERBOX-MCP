@@ -134,6 +134,10 @@ class ChatterboxBackend:
             torch.cuda.empty_cache()
 
     def generate(self, req, job_id, progress, cancelled):
+        if req.change_speed != 1.0:
+            from .audio import require_ffmpeg
+
+            require_ffmpeg()
         from .metrics import GPUMemorySampler
 
         sampler = GPUMemorySampler().start()

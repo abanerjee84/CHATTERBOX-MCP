@@ -1,0 +1,20 @@
+{
+  "processor": "ffmpeg atempo",
+  "request_speed": 0.95,
+  "original_duration_seconds": 35.78,
+  "final_duration_seconds": 37.66,
+  "slower_080_duration_seconds": 44.72,
+  "audio_sha256": "309679c48e42d36300cb9114f8b41fbb32791547aba41842dd384e0a555fe6ef",
+  "checks": {
+    "exact_user_request_regenerated": true,
+    "http_matches_cli_copy": true,
+    "finite_24khz_audio": true,
+    "tests_passed": 58
+  },
+  "transient_probe": {
+    "active_input_samples": 929,
+    "old_librosa_active_samples": 5781,
+    "ffmpeg_active_samples": 1427,
+    "threshold": "1% of peak"
+  }
+}
