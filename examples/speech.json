@@ -1,0 +1,6 @@
+{
+  "text": "Hello. This speech is generated locally with Chatterbox.",
+  "exaggeration": 0.5,
+  "cfg_weight": 0.5,
+  "seed": 42
+}

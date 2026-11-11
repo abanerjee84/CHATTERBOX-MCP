@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "local-chatterbox": {
+      "command": "E:\\TOOLS\\CHATTERBOX-MCP\\.venv\\Scripts\\python.exe",
+      "args": [
+        "-m",
+        "chatterbox_mcp",
+        "mcp"
+      ],
+      "env": {
+        "CHATTER_TTS_HOME": "E:\\TOOLS\\CHATTERBOX-MCP\\data"
+      }
+    }
+  }
+}

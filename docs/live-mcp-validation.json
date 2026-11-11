@@ -1,0 +1,182 @@
+{
+  "model": "ResembleAI/chatterbox",
+  "runs": {
+    "stdio_speech": {
+      "sample_rate": 24000,
+      "duration_seconds": 5.76,
+      "elapsed_seconds": 20.813,
+      "chunks": 1,
+      "seed": 73,
+      "voice_id": null,
+      "watermarked": true,
+      "memory": {
+        "peak_allocated_mib": 3200.3,
+        "peak_reserved_mib": 3388.0,
+        "gpu_uuid": "GPU-1fbff0da-1530-2c25-e1df-4f00ecd1601b",
+        "gpu_name": "NVIDIA GeForce RTX 3060",
+        "residency": {
+          "all_model_tensors_on_cuda": true,
+          "tensor_count": 2801
+        },
+        "windows_driver": {
+          "available": true,
+          "samples": 34,
+          "peak_dedicated_mib": 3519.18,
+          "peak_shared_mib": 78.0,
+          "current_dedicated_mib": 3519.18,
+          "current_shared_mib": 78.0
+        }
+      },
+      "audio_sha256": "cfc459720bd232845509592f1fcf7b9bef59d6b3595cb55a5b9ea1a18c781332",
+      "request": {
+        "text": "This is a real speech generation test through the local MCP connection. The audio stays on this computer.",
+        "voice_id": null,
+        "exaggeration": 0.5,
+        "cfg_weight": 0.5,
+        "temperature": 0.8,
+        "repetition_penalty": 1.2,
+        "min_p": 0.05,
+        "top_p": 1.0,
+        "autocast": "off",
+        "seed": 73,
+        "client_request_id": null
+      }
+    },
+    "stdio_cloning": {
+      "sample_rate": 24000,
+      "duration_seconds": 4.84,
+      "elapsed_seconds": 5.469,
+      "chunks": 1,
+      "seed": 74,
+      "voice_id": "cfc459720bd232845509592f1fcf7b9b",
+      "watermarked": true,
+      "memory": {
+        "peak_allocated_mib": 3212.6,
+        "peak_reserved_mib": 3388.0,
+        "gpu_uuid": "GPU-1fbff0da-1530-2c25-e1df-4f00ecd1601b",
+        "gpu_name": "NVIDIA GeForce RTX 3060",
+        "residency": {
+          "all_model_tensors_on_cuda": true,
+          "tensor_count": 2801
+        },
+        "windows_driver": {
+          "available": true,
+          "samples": 11,
+          "peak_dedicated_mib": 3519.18,
+          "peak_shared_mib": 78.0,
+          "current_dedicated_mib": 3519.18,
+          "current_shared_mib": 78.0
+        }
+      },
+      "audio_sha256": "e81f45a7dbe1c352af34ec4a3161ee0fbb3fc94210012f780d44b72a7f5adf14",
+      "request": {
+        "text": "This is different text spoken using a reference voice. No training was required.",
+        "voice_id": "cfc459720bd232845509592f1fcf7b9b",
+        "exaggeration": 0.8,
+        "cfg_weight": 0.3,
+        "temperature": 0.8,
+        "repetition_penalty": 1.2,
+        "min_p": 0.05,
+        "top_p": 1.0,
+        "autocast": "off",
+        "seed": 74,
+        "client_request_id": null
+      }
+    },
+    "default_after_cloning": {
+      "sample_rate": 24000,
+      "duration_seconds": 5.76,
+      "elapsed_seconds": 5.875,
+      "chunks": 1,
+      "seed": 73,
+      "voice_id": null,
+      "watermarked": true,
+      "memory": {
+        "peak_allocated_mib": 3232.5,
+        "peak_reserved_mib": 3388.0,
+        "gpu_uuid": "GPU-1fbff0da-1530-2c25-e1df-4f00ecd1601b",
+        "gpu_name": "NVIDIA GeForce RTX 3060",
+        "residency": {
+          "all_model_tensors_on_cuda": true,
+          "tensor_count": 2801
+        },
+        "windows_driver": {
+          "available": true,
+          "samples": 12,
+          "peak_dedicated_mib": 3519.18,
+          "peak_shared_mib": 78.0,
+          "current_dedicated_mib": 3519.18,
+          "current_shared_mib": 78.0
+        }
+      },
+      "audio_sha256": "cfc459720bd232845509592f1fcf7b9bef59d6b3595cb55a5b9ea1a18c781332",
+      "request": {
+        "text": "This is a real speech generation test through the local MCP connection. The audio stays on this computer.",
+        "voice_id": null,
+        "exaggeration": 0.5,
+        "cfg_weight": 0.5,
+        "temperature": 0.8,
+        "repetition_penalty": 1.2,
+        "min_p": 0.05,
+        "top_p": 1.0,
+        "autocast": "off",
+        "seed": 73,
+        "client_request_id": null
+      }
+    },
+    "http_long_cloning": {
+      "sample_rate": 24000,
+      "duration_seconds": 19.95,
+      "elapsed_seconds": 19.437,
+      "chunks": 2,
+      "seed": 75,
+      "voice_id": "cfc459720bd232845509592f1fcf7b9b",
+      "watermarked": true,
+      "memory": {
+        "peak_allocated_mib": 3313.3,
+        "peak_reserved_mib": 3544.0,
+        "gpu_uuid": "GPU-1fbff0da-1530-2c25-e1df-4f00ecd1601b",
+        "gpu_name": "NVIDIA GeForce RTX 3060",
+        "residency": {
+          "all_model_tensors_on_cuda": true,
+          "tensor_count": 2801
+        },
+        "windows_driver": {
+          "available": true,
+          "samples": 39,
+          "peak_dedicated_mib": 3675.19,
+          "peak_shared_mib": 78.0,
+          "current_dedicated_mib": 3675.19,
+          "current_shared_mib": 78.0
+        }
+      },
+      "audio_sha256": "0e943dad7bc13e9871a61e47a3e1e7e9efdcd26e0ca42be081f2dc170b76ca1a",
+      "request": {
+        "text": "The morning was quiet, and sunlight was falling across the desk. A notebook lay open beside a cup of coffee. Outside, the trees moved slowly in the breeze, while a few birds called from the garden. There was time to read, think, and finish the next page before the rest of the house woke up. This final sentence checks that a longer passage can continue across more than one speech segment.",
+        "voice_id": "cfc459720bd232845509592f1fcf7b9b",
+        "exaggeration": 0.5,
+        "cfg_weight": 0.5,
+        "temperature": 0.8,
+        "repetition_penalty": 1.2,
+        "min_p": 0.05,
+        "top_p": 1.0,
+        "autocast": "off",
+        "seed": 75,
+        "client_request_id": null
+      }
+    }
+  },
+  "tools": [
+    "cancel_speech_job",
+    "generate_speech",
+    "get_speech_job",
+    "list_voices",
+    "speech_service_status",
+    "upload_voice"
+  ],
+  "default_voice_isolated": true,
+  "cancellation": {
+    "status": "cancelled",
+    "elapsed_seconds": 0.437
+  }
+}

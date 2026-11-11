@@ -1,0 +1,16 @@
+[
+  {
+    "text": "We did it! That was incredible!",
+    "exaggeration": 1.0,
+    "cfg_weight": 0.3,
+    "seed": 403,
+    "out": "data/outputs/batch-excited.wav"
+  },
+  {
+    "text": "Take a breath. There is plenty of time.",
+    "exaggeration": 0.45,
+    "cfg_weight": 0.5,
+    "seed": 404,
+    "out": "data/outputs/batch-calm.wav"
+  }
+]
