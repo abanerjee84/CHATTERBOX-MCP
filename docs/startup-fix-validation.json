@@ -1,0 +1,55 @@
+{
+  "issue": "Windows error 1455 during full checkpoint mapping, followed by overlapping worker launch/lock failures",
+  "fix": [
+    "Initialize model weights on final CUDA device",
+    "Read and validate one safetensors tensor at a time, without checkpoint-sized mmap",
+    "Wait for held worker lock before launching",
+    "Monitor launched PID and report fresh startup log output"
+  ],
+  "request": {
+    "text": "Cloning quality depends on the recording and the model. An accent tag can influence a cloned voice too. Use recordings you have permission to use.",
+    "voice_id": "4266b7e008e84ca48ea05e11fb2c8415",
+    "exaggeration": 0.5,
+    "cfg_weight": 1.0,
+    "temperature": 1.0,
+    "repetition_penalty": 1.2,
+    "min_p": 0.05,
+    "top_p": 1.0,
+    "autocast": "off",
+    "seed": 403,
+    "client_request_id": null
+  },
+  "result": {
+    "sample_rate": 24000,
+    "duration_seconds": 7.6,
+    "elapsed_seconds": 63.594,
+    "chunks": 1,
+    "seed": 403,
+    "voice_id": "4266b7e008e84ca48ea05e11fb2c8415",
+    "watermarked": true,
+    "memory": {
+      "peak_allocated_mib": 3284.4,
+      "peak_reserved_mib": 3438.0,
+      "gpu_uuid": "GPU-1fbff0da-1530-2c25-e1df-4f00ecd1601b",
+      "gpu_name": "NVIDIA GeForce RTX 3060",
+      "residency": {
+        "all_model_tensors_on_cuda": true,
+        "tensor_count": 2801
+      },
+      "windows_driver": {
+        "available": true,
+        "samples": 123,
+        "peak_dedicated_mib": 3569.18,
+        "peak_shared_mib": 78.0,
+        "current_dedicated_mib": 3569.18,
+        "current_shared_mib": 78.0
+      }
+    }
+  },
+  "audio_sha256": "6625c5e1480a47bcbff51282336dd589170d1c16592e79e537ddbe02ea2173e1",
+  "checks": {
+    "tests_passed": 40,
+    "dependency_check": "clean",
+    "original_upstream_sources": "unchanged"
+  }
+}

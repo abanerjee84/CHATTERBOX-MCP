@@ -90,7 +90,7 @@ class ChatterboxBackend:
         select_gpu(self.settings)
         import torch
 
-        from ._upstream.tts import ChatterboxTTS
+        from .loading import load_chatterbox
 
         if (
             not torch.cuda.is_available()
@@ -106,9 +106,7 @@ class ChatterboxBackend:
         )
         torch.cuda.reset_peak_memory_stats()
         progress("loading_models", 5)
-        self.model = ChatterboxTTS.from_local(
-            self.settings.checkpoint_dir, device="cuda:0"
-        )
+        self.model = load_chatterbox(self.settings.checkpoint_dir, "cuda:0", progress)
         self.default_conditionals = copy.deepcopy(self.model.conds)
         self.audit_gpu()
 

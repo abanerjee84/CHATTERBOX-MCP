@@ -6,10 +6,37 @@ import sys
 import time
 
 import httpx
-from filelock import FileLock
+from filelock import FileLock, Timeout
 
 from .config import Settings, runtime_environment
 from .jobs import TERMINAL
+
+STARTUP_TIMEOUT = 45
+
+
+def worker_locked(settings):
+    try:
+        with FileLock(str(settings.home / "worker.lock"), timeout=0):
+            return False
+    except Timeout:
+        return True
+
+
+def startup_error(settings, offset=0):
+    path = settings.home / "service.log"
+    tail = ""
+    try:
+        with path.open("rb") as log:
+            log.seek(0, 2)
+            end = log.tell()
+            log.seek(max(offset, end - 6000))
+            lines = log.read().decode("utf-8", errors="replace").strip().splitlines()
+            tail = "\n".join(lines[-12:])
+    except OSError:
+        pass
+    return f"Service did not become ready. See {path}" + (
+        f"\nLatest startup output:\n{tail}" if tail else ""
+    )
 
 
 class Client:
@@ -31,7 +58,7 @@ class Client:
 
     def reachable(self):
         try:
-            data = self._request("GET", "/health").json()
+            data = self._request("GET", "/health", timeout=2).json()
             return data.get("service") == "chatter-tts-local" and data.get(
                 "home"
             ) == str(self.settings.home)
@@ -43,16 +70,31 @@ class Client:
             return
         if not self.autostart:
             raise RuntimeError("Speech service is unavailable")
-        with FileLock(str(self.settings.home / "startup.lock"), timeout=25):
+        with FileLock(
+            str(self.settings.home / "startup.lock"), timeout=STARTUP_TIMEOUT + 5
+        ):
             if self.reachable():
                 return
+            deadline = time.monotonic() + STARTUP_TIMEOUT
+            while worker_locked(self.settings):
+                if self.reachable():
+                    return
+                if time.monotonic() >= deadline:
+                    raise RuntimeError(
+                        "Existing worker holds worker.lock but is not responding; it may be starting or shutting down. "
+                        + startup_error(self.settings)
+                    )
+                time.sleep(0.1)
             env = runtime_environment()
             env["CHATTER_TTS_HOME"] = str(self.settings.home)
             process = None
+            pid = None
+            log_path = self.settings.home / "service.log"
+            offset = log_path.stat().st_size if log_path.exists() else 0
             if os.name == "nt":
                 from .windows import start_service
 
-                start_service(
+                pid = start_service(
                     [sys.executable, "-m", "chatterbox_mcp", "serve", "--background"],
                     env,
                     self.settings.home,
@@ -67,16 +109,20 @@ class Client:
                         stderr=log,
                         start_new_session=True,
                     )
-            deadline = time.monotonic() + 20
+            deadline = time.monotonic() + STARTUP_TIMEOUT
+            launched = time.monotonic()
             while time.monotonic() < deadline:
                 if self.reachable():
                     return
                 if process is not None and process.poll() is not None:
                     break
+                if pid is not None and time.monotonic() - launched > 1:
+                    from .windows import process_running
+
+                    if not process_running(pid):
+                        break
                 time.sleep(0.2)
-            raise RuntimeError(
-                f"Service did not start. See {self.settings.home / 'service.log'}"
-            )
+            raise RuntimeError(startup_error(self.settings, offset))
 
     def health(self):
         self.ensure()

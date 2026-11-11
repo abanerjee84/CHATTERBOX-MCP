@@ -6,7 +6,7 @@ The supported target is **Windows x64 with an RTX 3060 12 GB**. The worker selec
 
 This project retains the original Chatterbox English model and its **exaggeration and CFG controls**. It uses pinned Chatterbox 0.1.7 inference sources with the existing tested PyTorch 2.8 CUDA runtime. Turbo, Nano, and multilingual models are separate upstream variants and are not exposed here.
 
-**Validated locally:** 31 tests pass; both MCP transports generate actual speech and cloned voices. A two-segment passage produced 19.95 seconds of audio in 19.44 seconds with models resident, peaking at 3,675 MiB dedicated VRAM. A repeated default-voice request was byte-identical before and after a reference-voice job. See [validation details](docs/gpu-validation.md).
+**Validated locally:** 40 tests pass; both MCP transports generate actual speech and cloned voices. A two-segment passage produced 19.95 seconds of audio in 19.44 seconds with models resident, peaking at 3,675 MiB dedicated VRAM. A repeated default-voice request was byte-identical before and after a reference-voice job. See [validation details](docs/gpu-validation.md).
 
 ## Install
 
@@ -171,6 +171,8 @@ chatter-tts configure --residency unload
 
 The CUDA allocator budget defaults to 8 GiB. T3, S3Gen, and voice-encoder parameters and buffers are audited on CUDA. CPU work handles loading, tokenization, reference decoding/resampling, watermark processing, file I/O, and metrics. No CPU model-offload fallback is configured. Allocator limits do not cap all CUDA driver allocations.
 
+Model loading initializes the modules on the selected CUDA device and streams checkpoint tensors individually. This avoids full CPU parameter copies and whole-checkpoint memory mappings, which can exhaust Windows commit memory even with free GPU VRAM. The largest tensor in the pinned checkpoint is about 32 MiB; temporary decoding buffers can coexist. Loading still requires host memory for Python and the CUDA runtime, and cold starts can take longer on a busy machine.
+
 Voice conditions are reset to the packaged speaker before and after every job. A reference supplied by one client therefore does not become another client's default voice. Long text is split into segments of at most 280 characters, preferring sentence boundaries, with 150 ms joins. Prosody can change at joins. Input is limited to 12,000 characters. Cancellation is checked between stages and on T3 forward passes; loading, reference processing, or a running S3Gen operation must finish before cancellation is observed.
 
 Set `CHATTER_TTS_HOME` to change the data directory. The legacy `CHATTERBOX_HOME` remains an alias for the project root, with data beneath its `data` folder. Default files:
@@ -185,6 +187,8 @@ data/service.log       Worker diagnostics
 ```
 
 All model files, references, outputs, credentials, environments, and caches are ignored by Git. Model downloads resume by verified ranges. If `doctor` reports missing files, rerun `chatter-tts setup-models`. If startup fails, inspect `data/service.log` and check whether another process owns port 8769.
+
+Autostart waits for an existing worker to finish starting or shutting down instead of launching additional workers against its lock. It monitors newly launched workers and includes their latest startup-log error when they exit or fail readiness checks. A held live lock is never deleted to force another worker through.
 
 ## Runtime and verification
 

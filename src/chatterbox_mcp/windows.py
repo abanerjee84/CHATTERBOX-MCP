@@ -3,6 +3,24 @@
 import subprocess
 
 
+def process_running(pid):
+    import win32api
+    import win32con
+    import win32process
+
+    try:
+        handle = win32api.OpenProcess(
+            win32con.PROCESS_QUERY_LIMITED_INFORMATION, False, pid
+        )
+    except Exception as exc:
+        # Access denied cannot establish that a process has exited.
+        return getattr(exc, "winerror", None) == 5
+    try:
+        return win32process.GetExitCodeProcess(handle) == 259
+    finally:
+        handle.Close()
+
+
 def start_service(command, env, cwd):
     import pythoncom
     import win32com.client
