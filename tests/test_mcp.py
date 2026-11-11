@@ -72,6 +72,7 @@ async def exercise(session, reference_path):
     }
     tools_by_name = {t.name: t for t in (await session.list_tools()).tools}
     assert "voice" in tools_by_name["generate_speech"].inputSchema["properties"]
+    assert "change_speed" in tools_by_name["generate_speech"].inputSchema["properties"]
     result = await session.call_tool("speech_service_status", {})
     assert not result.isError
     text = "\n".join(c.text for c in result.content if c.type == "text")
@@ -89,11 +90,12 @@ async def exercise(session, reference_path):
     # These tests intentionally have no model weights. A real submission must fail honestly.
     submitted = await session.call_tool(
         "generate_speech",
-        {"text": "Hello from Chatterbox.", "seed": -1},
+        {"text": "Hello from Chatterbox.", "seed": -1, "change_speed": 0.75},
     )
     assert not submitted.isError
     job_id = submitted.structuredContent["job_id"]
     assert 0 <= submitted.structuredContent["request"]["seed"] < 2**32
+    assert submitted.structuredContent["request"]["change_speed"] == 0.75
     for _ in range(40):
         response = await session.call_tool("get_speech_job", {"job_id": job_id})
         if response.structuredContent["status"] == "failed":

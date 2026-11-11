@@ -93,6 +93,9 @@ def prepare_requests(args, client):
         out = data.pop("out", None)
         reference = data.pop("voice", None)
         data.setdefault("autocast", args.autocast or "off")
+        data.setdefault(
+            "change_speed", args.change_speed if args.change_speed is not None else 1.0
+        )
         if reference is not None and data.get("voice_id"):
             raise ValueError("Choose reference voice or voice_id, not both")
         req = SpeechRequest.model_validate(data)

@@ -30,3 +30,9 @@ A later real-user run recorded Windows error 1455 (paging-file/commit exhaustion
 The user's supplied text, local reference recording, CFG 1, temperature 1, and seed 403 were then run successfully through CLI autostart. The result was 7.60 seconds of finite, non-silent 24 kHz audio, with 3,438 MiB peak reserved and 3,569 MiB peak dedicated VRAM. Backend time including cold loading was 63.594 seconds on the busy machine. This is a different workload/system state from the earlier table, not a speed comparison. The recording is not committed.
 
 Startup now waits for an existing worker lock to clear, watches the launched process for exit, uses bounded readiness probes, and reports new startup-log output on failure. Regression tests cover duplicate launches and error reporting, while loader tests cover numeric weight/buffer parity, missing tensors, duplicate header keys, truncation, trailing data, and shape mismatches. The current total is 40 passing tests; the dependency check is clean. See [startup-fix-validation.json](startup-fix-validation.json).
+
+## Final output speed
+
+`change_speed` adds pitch-preserving tempo adjustment after segment assembly. A real CLI request using the same reference, text, and seed as the startup check produced 7.60 seconds before adjustment and 5.06 seconds in the final WAV at speed 1.5. The final watermark pass can round a small number of samples at frame boundaries. The actual saved duration is reported in metadata.
+
+The `--out` file, HTTP audio artifact, and MCP audio attachment were verified byte-identical and contained the adjusted waveform. See [speed-validation.json](speed-validation.json). Tests also check duration and pitch at speeds 0.5, 0.75, 1.25, and 1.5, exact sample preservation at 1, range validation, CLI aliases, batch defaults, MCP transport, and retries of older jobs without a speed field. The current total is 54 passing tests; lint passes.

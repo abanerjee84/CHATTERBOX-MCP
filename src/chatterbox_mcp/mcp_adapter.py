@@ -47,6 +47,7 @@ def create_mcp(settings, autostart=True):
         repetition_penalty: float = 1.2,
         min_p: float = 0.05,
         top_p: float = 1.0,
+        change_speed: float = 1.0,
         seed: int | None = None,
         client_request_id: str | None = None,
     ) -> CallToolResult:
@@ -54,6 +55,7 @@ def create_mcp(settings, autostart=True):
 
         voice is an existing local reference path/name; voice_id comes from upload_voice.
         Choose one. exaggeration is 0-1.5; cfg_weight is 0-1. No emotion labels or accent tags.
+        change_speed adjusts final audio tempo while preserving pitch: 0.5 slower, 1 unchanged, 1.5 faster.
         """
         if voice is not None and voice_id is not None:
             raise ValueError("Choose voice or voice_id, not both")
@@ -68,6 +70,7 @@ def create_mcp(settings, autostart=True):
             repetition_penalty=repetition_penalty,
             min_p=min_p,
             top_p=top_p,
+            change_speed=change_speed,
             seed=seed,
             client_request_id=client_request_id,
         )

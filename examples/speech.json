@@ -2,5 +2,6 @@
   "text": "Hello. This speech is generated locally with Chatterbox.",
   "exaggeration": 0.5,
   "cfg_weight": 0.5,
+  "change_speed": 1.0,
   "seed": 42
 }

@@ -15,6 +15,7 @@ class SpeechRequest(BaseModel):
     repetition_penalty: float = Field(default=1.2, ge=1, le=3)
     min_p: float = Field(default=0.05, ge=0, le=1)
     top_p: float = Field(default=1.0, gt=0, le=1)
+    change_speed: float = Field(default=1.0, ge=0.5, le=1.5)
     autocast: Literal["off", "fp16", "bf16"] = "off"
     seed: int | None = Field(default=None, ge=-1, le=2**32 - 1)
     client_request_id: str | None = Field(default=None, min_length=1, max_length=128)

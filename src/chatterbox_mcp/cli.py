@@ -60,6 +60,13 @@ def main():
     gen.add_argument("--min-p", type=float, default=0.05)
     gen.add_argument("--top-p", type=float, default=1.0)
     gen.add_argument(
+        "--change_speed",
+        "--change-speed",
+        type=float,
+        default=None,
+        help="Final audio tempo, 0.5-1.5: lower is slower, higher is faster; preserves pitch (default 1)",
+    )
+    gen.add_argument(
         "--autocast", choices=["off", "fp16", "bf16"], default=argparse.SUPPRESS
     )
     gen.add_argument("--temperature", type=float, default=0.8)

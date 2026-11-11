@@ -1,0 +1,52 @@
+{
+  "request": {
+    "text": "Cloning quality depends on the recording and the model. An accent tag can influence a cloned voice too. Use recordings you have permission to use.",
+    "voice_id": "4266b7e008e84ca48ea05e11fb2c8415",
+    "exaggeration": 0.5,
+    "cfg_weight": 1.0,
+    "temperature": 1.0,
+    "repetition_penalty": 1.2,
+    "min_p": 0.05,
+    "top_p": 1.0,
+    "change_speed": 1.5,
+    "autocast": "off",
+    "seed": 403,
+    "client_request_id": null
+  },
+  "result": {
+    "sample_rate": 24000,
+    "duration_seconds": 5.06,
+    "original_duration_seconds": 7.6,
+    "change_speed": 1.5,
+    "elapsed_seconds": 52.359,
+    "chunks": 1,
+    "seed": 403,
+    "voice_id": "4266b7e008e84ca48ea05e11fb2c8415",
+    "watermarked": true,
+    "memory": {
+      "peak_allocated_mib": 3284.4,
+      "peak_reserved_mib": 3438.0,
+      "gpu_uuid": "GPU-1fbff0da-1530-2c25-e1df-4f00ecd1601b",
+      "gpu_name": "NVIDIA GeForce RTX 3060",
+      "residency": {
+        "all_model_tensors_on_cuda": true,
+        "tensor_count": 2801
+      },
+      "windows_driver": {
+        "available": true,
+        "samples": 99,
+        "peak_dedicated_mib": 3569.18,
+        "peak_shared_mib": 78.0,
+        "current_dedicated_mib": 3569.18,
+        "current_shared_mib": 78.0
+      }
+    }
+  },
+  "audio_sha256": "4b4b02b3faa8d9908605fbb45413e60bdfeae1d88fe87b0bdd936ddff4915b4a",
+  "checks": {
+    "cli_out_is_adjusted": true,
+    "http_audio_matches_cli_copy": true,
+    "mcp_audio_matches_cli_copy": true,
+    "test_count": 54
+  }
+}

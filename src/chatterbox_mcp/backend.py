@@ -191,8 +191,20 @@ class ChatterboxBackend:
             finally:
                 hook.remove()
                 reset_voice(self.model, self.default_conditionals)
-            progress("saving", 95)
             samples = np.concatenate(waves)
+            original_duration = len(samples) / 24000
+            if req.change_speed != 1.0:
+                from .audio import change_tempo
+
+                progress("adjusting_speed", 92)
+                samples = change_tempo(samples, req.change_speed)
+                progress("watermarking_final_audio", 94)
+                samples = self.model.watermarker.apply_watermark(
+                    samples, sample_rate=24000
+                )
+                if not samples.size or not np.isfinite(samples).all():
+                    raise ValueError("Speed adjustment returned empty or invalid audio")
+            progress("saving", 95)
             path = self.settings.home / "outputs" / (job_id + ".wav")
             sf.write(path, samples, 24000, subtype="PCM_16")
             self.memory = {
@@ -212,6 +224,8 @@ class ChatterboxBackend:
                 "audio_url": f"/v1/jobs/{job_id}/audio",
                 "sample_rate": 24000,
                 "duration_seconds": round(len(samples) / 24000, 3),
+                "original_duration_seconds": round(original_duration, 3),
+                "change_speed": req.change_speed,
                 "elapsed_seconds": round(time.monotonic() - started, 3),
                 "chunks": len(parts),
                 "seed": req.seed,
